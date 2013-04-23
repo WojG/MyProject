@@ -93,10 +93,6 @@ public class Interface
         new_panel.add(new_phone);
         new_panel.add(new_text7);
 
-
-
-
-
         JOptionPane new_pane = new JOptionPane(new_panel);
 
         JDialog dialog = new_pane.createDialog(new_panel, "Edit Physician");
