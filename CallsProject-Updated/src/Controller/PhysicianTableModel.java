@@ -7,8 +7,6 @@ package Controller;
 
 import Broker.PhysicianBroker;
 import Container.Physician;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import javax.swing.table.AbstractTableModel;
 
