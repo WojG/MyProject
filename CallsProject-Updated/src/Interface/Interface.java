@@ -40,7 +40,7 @@ public class Interface
         return scrollPane;
     }
 
-    public JDialog addDialog(int empID)
+  /*  public JDialog addDialog(int empID)
     {
         PhysicianTableModel ptm = new PhysicianTableModel();
         JPanel new_panel = new JPanel(new GridLayout(0, 2));
@@ -95,11 +95,11 @@ public class Interface
 
         JOptionPane new_pane = new JOptionPane(new_panel);
 
-        JDialog dialog = new_pane.createDialog(new_panel, "Edit Physician");
+     //   JDialog dialog = new_pane.showInputDialog(new_panel, "Edit Physician", "Edit Physician",);
         dialog.setModal(false);
         dialog.setVisible(true);
         return dialog;
-    }
+    }*/
 
     private class PhysicianTableListener extends MouseAdapter
     {
@@ -111,7 +111,7 @@ public class Interface
             System.out.println(selectedRow);
             //     addDialog(selectedRow);
 
-            addDialog(selectedRow);
+          // addDialog(selectedRow);
         }
     }
 }

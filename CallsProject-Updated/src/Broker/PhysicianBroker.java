@@ -86,26 +86,43 @@ public class PhysicianBroker {
         }
     }
     
-    public void updatePhysician(Object o)
+    public void updatePhysician(Object o, int empID, int column)
     {
         try 
         {
             Connection connect = connection.getConnectionFromPool();   
-            Physician p = (Physician) o;
-            String SQL;
-            SQL = "call updatePhysician(?,?,?,?,?,?,?,?);";
-            CallableStatement cs = connect.prepareCall(SQL);
-            cs.setInt(1,p.getEmployeeId());
-            cs.setString(2,p.getFirstName());
-            cs.setString(3,p.getLastName());
-            cs.setDate(4,new Date(p.getBirthDate().getTime()));
-            cs.setDate(5,new Date(p.getStartDate().getTime()));
-            cs.setDate(6,new Date(p.getEndDate().getTime()));
-            cs.setString(7,p.getAddress());
-            cs.setString(8,p.getPhoneNumber());
             
-            cs.execute();
-            cs.close();
+            switch (column)
+            {
+                case 0:
+                    Statement fn = connect.createStatement();
+                    fn.execute("UPDATE physician SET First_Name = '" + o + "' WHERE Employee_ID = '" + empID + "'");                    
+                    break;
+                case 1:
+                    Statement ln = connect.createStatement();
+                    ln.execute("UPDATE physician SET Last_Name = '" + o + "' WHERE Employee_ID = '" + empID + "'");  
+                    break;
+                case 2:
+                    Statement bd = connect.createStatement();
+                    bd.execute("UPDATE physician SET Birth_Date = '" + o + "' WHERE Employee_ID = '" + empID + "'");  
+                    break;
+                case 3:
+                    Statement sd = connect.createStatement();
+                    sd.execute("UPDATE physician SET Start_Employment_Date = '" + o + "' WHERE Employee_ID = '" + empID + "'");  
+                    break;
+                case 4:
+                    Statement ed = connect.createStatement();
+                    ed.execute("UPDATE physician SET End_Employment_Date = '" + o + "' WHERE Employee_ID = '" + empID + "'");  
+                    break;
+                case 5:
+                    Statement a = connect.createStatement();
+                    a.execute("UPDATE physician SET Address = '" + o + "' WHERE Employee_ID = '" + empID + "'");  
+                    break;
+                case 6:
+                    Statement p = connect.createStatement();
+                    p.execute("UPDATE physician SET Phone = '" + o + "' WHERE Employee_ID = '" + empID + "'");  
+                    break;
+            }
             
             connection.returnConnectionToPool(connect);            
         } 
