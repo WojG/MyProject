@@ -8,6 +8,7 @@ import Broker.PhysicianBroker;
 import Container.Physician;
 import Utility.Utilities;
 import java.util.ArrayList;
+import java.util.Date;
 import javax.swing.table.AbstractTableModel;
 
 /**
@@ -64,13 +65,14 @@ public class PhysicianTableModel extends AbstractTableModel
     public Object getValueAt(int rowIndex, int columnIndex)
     {
         Physician p = phys.get(rowIndex);
+        System.out.println(p.getBirthDate());
         switch (columnIndex)
         {
-            case 0:
+            case 0:                
                 return p.getFirstName();
             case 1:
                 return p.getLastName();
-            case 2:
+            case 2:                
                 return p.getBirthDate();
             case 3:
                 return p.getStartDate();
@@ -82,7 +84,7 @@ public class PhysicianTableModel extends AbstractTableModel
                 return p.getPhoneNumber();
             default:
                 return "Incorrect Input";
-        }
+        }        
     }
 
     @Override
@@ -115,15 +117,15 @@ public class PhysicianTableModel extends AbstractTableModel
                 pb.updatePhysician(value, empID, col);
                 break;
             case 2:
-                p.setBirthDate(Utilities.convertFromString((String)value, "yyyy-mm-dd") ); 
+                p.setBirthDate((Date)value); 
                 pb.updatePhysician(value, empID, col);
                 break;
             case 3:
-                p.setStartDate(Utilities.convertFromString((String)value, "yyyy-MM-dd"));
+                p.setStartDate((Date)value);
                 pb.updatePhysician(value, empID, col);
                 break;
             case 4:
-                p.setEndDate(Utilities.convertFromString((String)value, "yyyy-mm-dd"));                
+                p.setEndDate((Date)value);                
                 pb.updatePhysician(value, empID, col);
                 break;
             case 5:
