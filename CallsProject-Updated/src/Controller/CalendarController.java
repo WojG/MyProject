@@ -17,9 +17,10 @@ import javax.swing.*;
  */
 public class CalendarController
 {
+
     private ArrayList<JPanel> calendarPanels;
     private ArrayList<JLabel> dayNames;
-    private ArrayList<JPanel> monthPanels;
+    private ArrayList<JPanel> dayPanels;
     
     private JButton next, previous;
     
@@ -27,83 +28,98 @@ public class CalendarController
     
     private int init_month;
     private int init_year;
-    private int init_DOM;
-    private int init_GapMonth;
-    
-    private JPanel calendar, calendarPanel, calendarNavigation; 
+    private int init_DOM, new_DOM;
+    private int init_GapMonth, new_GapMonth;
+    private JPanel calendar, calendarPanel, calendarNavigation;
     
     private GridBagConstraints gbc;
     
-    private String[] days = {"Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"};
-    
+    private String[] days =
+    {
+        "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"
+    };
+       
     public CalendarController()
     {
         calendarPanels = new ArrayList();
         dayNames = new ArrayList();
-        monthPanels = new ArrayList();
-        
+        dayPanels = new ArrayList();
+
         calendarPanel = new JPanel(new BorderLayout());
-        calendar = new JPanel(new GridBagLayout()); 
+        calendar = new JPanel(new GridBagLayout());
         calendarNavigation = new JPanel(new FlowLayout());
-        
+
         next = new JButton("Next");
         next.addActionListener(new CalendarButtons());
-        previous = new JButton("Previous");                
+        previous = new JButton("Previous");
+        previous.addActionListener(new CalendarButtons());
         
-        gbc = new GridBagConstraints();        
-        
+        gbc = new GridBagConstraints();
+                
         Calendar cal = Calendar.getInstance();
         
+        init_year = cal.get(Calendar.YEAR);        
         init_month = cal.get(Calendar.MONTH);
-        init_year = cal.get(Calendar.YEAR);
-        init_DOM = cal.getActualMaximum(Calendar.DAY_OF_MONTH);        
+        init_DOM = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
         init_GapMonth = cal.get(Calendar.DAY_OF_WEEK);
-        
-        date = new JLabel(Utilities.integerToMonth(init_month, init_year));
+
+        date = new JLabel(Utilities.integerToStringMonth(init_month, init_year));
     }
     
+    public void setDate(String d)
+    {
+        date.setText(d);
+    }
+
+    public String getDate()
+    {
+        return date.getText();
+    }
+
+    // constructs entire calendar window
     public JPanel constructCalendarWindow()
-    {        
-        calendarPanel.add(createNavigation(),BorderLayout.NORTH);
+    {
+        calendarPanel.add(createNavigation(), BorderLayout.NORTH);
         calendarPanel.add(createCalendarSkeleton(), BorderLayout.CENTER);
-        
+
         createDayNames();
         addDayNamesToCalendar();
         addMonthPanelsAndNumbers();
-        
+
         return calendarPanel;
     }
-    
+
     public JPanel createNavigation()
-    {        
+    {
         calendarNavigation.add(previous);
         calendarNavigation.add(date);
         calendarNavigation.add(next);
-        
+
         return calendarNavigation;
     }
     
+    // creates only the calendar panels
     public JPanel createCalendarSkeleton()
     {
         for (int i = 0; i < 49; i++)
         {
             calendarPanels.add(new JPanel(new BorderLayout()));
             calendarPanels.get(i).setBorder(BorderFactory.createLoweredBevelBorder());
-            set_gbc(i/7,i%7, 1.0, (i/7 == 0) ? 0.1 : 1.0, 1,1,GridBagConstraints.BOTH,GridBagConstraints.CENTER);
-            calendar.add(calendarPanels.get(i),gbc);
-        }        
+            set_gbc(i / 7, i % 7, 1.0, (i / 7 == 0) ? 0.1 : 1.0, 1, 1, GridBagConstraints.BOTH, GridBagConstraints.CENTER);
+            calendar.add(calendarPanels.get(i), gbc);
+        }
         return calendar;
     }
-    
+
     public ArrayList createDayNames()
     {
         for (int i = 0; i < days.length; i++)
-        {            
-            dayNames.add(new JLabel(days[i],JLabel.CENTER));          
-        }        
+        {
+            dayNames.add(new JLabel(days[i], JLabel.CENTER));
+        }
         return dayNames;
     }
-    
+
     public void addDayNamesToCalendar()
     {
         for (int i = 0; i < days.length; i++)
@@ -112,19 +128,24 @@ public class CalendarController
             calendarPanels.get(i).add(dayNames.get(i));
         }
     }
-    
+
     public void addMonthPanelsAndNumbers()
     {
         for (int i = 0; i < init_DOM; i++)
         {
-            monthPanels.add(new JPanel(new BorderLayout()));
-            monthPanels.get(i).add(new JLabel(Integer.toString(i+1)));
-            monthPanels.get(i).setBorder(BorderFactory.createRaisedBevelBorder());
-            monthPanels.get(i).setBackground(Color.WHITE);
-            calendarPanels.get(i+(days.length - 1)+init_GapMonth).add(monthPanels.get(i));
-        }        
+            dayPanels.add(new JPanel(new BorderLayout()));
+            dayPanels.get(i).add(new JLabel(Integer.toString(i + 1)));
+            dayPanels.get(i).setBorder(BorderFactory.createRaisedBevelBorder());
+            dayPanels.get(i).setBackground(Color.WHITE);
+            calendarPanels.get(i + (days.length - 1) + init_GapMonth).add(dayPanels.get(i));
+        }
     }
+    
+    public void newMonthNumbers()
+    {
         
+    }
+
     private void set_gbc(int row, int column, double wx, double wy, int width, int height, int fill, int anchor)
     {
         gbc.gridy = row;
@@ -139,9 +160,9 @@ public class CalendarController
 
     private class CalendarButtons implements ActionListener
     {
-
         public CalendarButtons()
         {
+            
         }
 
         @Override
@@ -149,12 +170,29 @@ public class CalendarController
         {
             if (e.getSource() == next)
             {
+                Calendar c;
+                long milliseconds;
+                milliseconds = Utilities.stringToIntegerMonth(getDate());
+                c = Calendar.getInstance();
+                c.setTimeInMillis(milliseconds);
+                c.add(Calendar.MONTH, 1);
                 
-            }
+                new_DOM = c.getActualMaximum(Calendar.DAY_OF_MONTH);
+                new_GapMonth = c.get(Calendar.DAY_OF_WEEK);
+                             
+                setDate(Utilities.integerToStringMonth(c.get(Calendar.MONTH), c.get(Calendar.YEAR)));
+            } 
             
-            else if (e.getSource() == previous)
+            if (e.getSource() == previous)
             {
-                
+                Calendar c;
+                long milliseconds;
+                milliseconds = Utilities.stringToIntegerMonth(getDate());
+                c = Calendar.getInstance();
+                c.setTimeInMillis(milliseconds);
+                c.add(Calendar.MONTH, -1);
+
+                setDate(Utilities.integerToStringMonth(c.get(Calendar.MONTH), c.get(Calendar.YEAR)));                
             }
         }
     }
